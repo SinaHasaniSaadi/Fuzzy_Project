@@ -1,9 +1,11 @@
-import InferenceEngine_wheel
 import numpy as np
+from InferenceEngine_wheel import inference_enginge
+from Fuzzify import Fuzzifier
+from Defuzzify import Defuzzifier
 
-X1 = np.linspace(0, 100, num=10000)
-X2 = np.linspace(0, 100, num=10000)
-WHEEL = np.linspace(-50, 50, num=10000)
+X1 = np.linspace(0, 100, num=101)
+X2 = np.linspace(0, 100, num=101)
+WHEEL = np.linspace(-50, 50, num=101)
 
 CLOSE_L = -1 / 50 * X1 + 1
 CLOSE_L = np.where(CLOSE_L < 0, 0, CLOSE_L)
@@ -60,10 +62,18 @@ class FuzzyController:
     """
 
     def __init__(self):
-        self.Engine = InferenceEngine_wheel.inference_enginge()
+        self.Engine = inference_enginge()
+        self.Engine.add_rull(CLOSE_L, MODERATE_R, LOW_R)
+        self.Engine.add_rull(CLOSE_L, FAR_R, HIGH_R)
+        self.Engine.add_rull(MODERATE_L, CLOSE_R, LOW_L)
+        self.Engine.add_rull(FAR_L, CLOSE_R, HIGH_L)
+        self.Engine.add_rull(MODERATE_L, MODERATE_R, NOTHING)
+
+        self.Fuzzifier = Fuzzifier(X1.copy(), X2.copy())
+        self.Defuzzifier = Defuzzifier(WHEEL.copy())
 
     def decide(self, left_dist, right_dist):
-        """
-        main method for doin all the phases and returning the final answer for rotation
-        """
-        return 0
+        A_prime = self.Fuzzifier.Singeleton(left_dist, right_dist)
+        B_primes = self.Engine.Product(A_prime.copy())
+
+        return self.Defuzzifier.Center_Average(B_primes)
