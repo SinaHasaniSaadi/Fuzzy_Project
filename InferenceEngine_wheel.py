@@ -2,12 +2,12 @@ import numpy as np
 
 
 class inference_enginge:
-    def _init_(self):
+    def __init__(self):
         self.Rulls = []
 
     def add_rull(self, A1, A2, B):
         A1_ExtendOn_x2 = np.resize(A1, (A2.shape[0], A1.shape[0]))
-        A2_ExtendOn_x1 = (np.resize(A1, (A1.shape[0], A2.shape[0]))).T
+        A2_ExtendOn_x1 = (np.resize(A2, (A1.shape[0], A2.shape[0]))).T
         B_ExtendOn_x1_x2 = (np.resize(B, (A1.shape[0], A2.shape[0], B.shape[0]))).T
         self.Rulls.append([A1_ExtendOn_x2, A2_ExtendOn_x1, B_ExtendOn_x1_x2])
 
@@ -64,7 +64,7 @@ class inference_enginge:
             )
         return B_primes
 
-    def Zadeh(self, A_prime):
+    def Dienes_Rescher(self, A_prime):
         B_primes = []
         for i in range(len(self.Rulls)):
             Min_Ai = np.resize(
