@@ -10,6 +10,7 @@ class inference_enginge:
         A2_ExtendOn_x1 = (np.resize(A2, (A1.shape[0], A2.shape[0]))).T
         B_ExtendOn_x1_x2 = (np.resize(B, (A1.shape[0], A2.shape[0], B.shape[0]))).T
         self.Rulls.append([A1_ExtendOn_x2, A2_ExtendOn_x1, B_ExtendOn_x1_x2])
+        
 
     def Product(self, A_prime):
         B_primes = []
