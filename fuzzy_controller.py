@@ -1,6 +1,6 @@
 import numpy as np
-from InferenceEngine import inference_enginge
-from Fuzzify import Fuzzifier
+from InferenceEngine import inference_enginge_wheel
+from Fuzzify import Fuzzifier_wheel
 from Defuzzify import Defuzzifier
 
 
@@ -12,7 +12,7 @@ class FuzzyController:
 
     def __init__(self):
         X_lr = np.linspace(0, 100, num=101)
-        Wheel = np.linspace(-50, 50, num=202)
+        Wheel = np.linspace(-50, 50, num=101)
 
         CLOSE_lr = -1 / 50 * X_lr + 1
         CLOSE_lr = np.where(CLOSE_lr < 0, 0, CLOSE_lr)
@@ -49,18 +49,19 @@ class FuzzyController:
         HIGH_l[Wheel <= 20] = (Wheel[Wheel <= 20] - 5) / 15
         HIGH_l[Wheel > 20] = -(Wheel[Wheel > 20] - 50) / 30
         HIGH_l = np.where(HIGH_l < 0, 0, HIGH_l)
-        self.Engine = inference_enginge()
+
+        self.Engine = inference_enginge_wheel()
         self.Engine.add_rull(CLOSE_lr, MODERATE_lr, LOW_r)
         self.Engine.add_rull(CLOSE_lr, FAR_lr, HIGH_r)
         self.Engine.add_rull(MODERATE_lr, CLOSE_lr, LOW_l)
         self.Engine.add_rull(FAR_lr, CLOSE_lr, HIGH_l)
         self.Engine.add_rull(MODERATE_lr, MODERATE_lr, Nothing)
 
-        self.Fuzzifier = Fuzzifier(X_lr.copy(), X_lr.copy())
+        self.Fuzzifier = Fuzzifier_wheel(X_lr.copy(), X_lr.copy())
         self.Defuzzifier = Defuzzifier(Wheel.copy())
 
     def decide(self, left_dist, right_dist):
         A_prime = self.Fuzzifier.Singeleton(left_dist, right_dist)
         B_primes = self.Engine.Minimum(A_prime.copy())
 
-        return self.Defuzzifier.Centeroid_Max(B_primes, 0.1)
+        return self.Defuzzifier.MeanOfMaxima_max(B_primes)
