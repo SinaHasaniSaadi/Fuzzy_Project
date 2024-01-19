@@ -61,7 +61,7 @@ class FuzzyController:
         self.Defuzzifier = Defuzzifier(Wheel.copy())
 
     def decide(self, left_dist, right_dist):
-        A_prime = self.Fuzzifier.Singeleton(left_dist, right_dist)
-        B_primes = self.Engine.Minimum(A_prime.copy())
+        A_prime = self.Fuzzifier.Min_Triangular(left_dist, right_dist, 10, 10)
+        B_primes = self.Engine.Lukasiewics(A_prime.copy())
 
-        return self.Defuzzifier.MeanOfMaxima_max(B_primes)
+        return self.Defuzzifier.MeanOfMaxima_min(B_primes)

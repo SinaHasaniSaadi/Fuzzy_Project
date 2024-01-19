@@ -172,6 +172,7 @@ def run():
         music_mode = f.readlines()[0].strip()
 
     car = Car(music_mode)
+    ind = 0
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -220,12 +221,9 @@ def run():
             # rotate_fuzzy_system=fuzzy_controller.FuzzyController()
             Command_wheel = Wheel_contol.decide(relative_left_dist, relative_right_dist)
             car.angle += Command_wheel
-            
 
-            #gas_fuzzy_system = additional_controller.FuzzyGasController()
-            Command_gas=gas_contol.decide(center_dist)
-            print(center_dist,'dist')
-            print(Command_gas,'gas')
+            # gas_fuzzy_system = additional_controller.FuzzyGasController()
+            Command_gas = gas_contol.decide(center_dist)
             car.update_position(Command_gas)
             car.display_car()
             car.crashed = car.crash_check()

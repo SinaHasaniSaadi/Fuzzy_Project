@@ -22,7 +22,7 @@ class FuzzyGasController:
         Moderate[X_c > 50] = -(X_c[X_c > 50] - 100) / 50
         Moderate = np.where(Moderate < 0, 0, Moderate)
 
-        Far = (X_c-90)/ 110
+        Far = (X_c - 90) / 110
         Far = np.where(Far < 0, 0, Far)
 
         Low = Gas.copy()
@@ -32,7 +32,7 @@ class FuzzyGasController:
 
         Medium = Gas.copy()
         Medium[Gas <= 15] = (Gas[Gas <= 15]) / 15
-        Medium[Gas > 15] = -(Gas[Gas > 15]-30) / 15
+        Medium[Gas > 15] = -(Gas[Gas > 15] - 30) / 15
         Medium = np.where(Medium < 0, 0, Medium)
 
         High = Gas.copy()
@@ -50,7 +50,5 @@ class FuzzyGasController:
 
     def decide(self, center_dist):
         A_prime = self.Fuzzifier.Singeleton(center_dist)
-        B_primes = self.Engine.Product(A_prime.copy())
-        return self.Defuzzifier.Center_Average(B_primes)
-
-    
+        B_primes = self.Engine.Lukasiewics(A_prime.copy())
+        return self.Defuzzifier.MeanOfMaxima_min(B_primes)
