@@ -16,7 +16,7 @@ class Defuzzifier:
             sum2 += height
         return sum1 / (sum2 + 0.0001)
 
-    def Centeroid_Max(self, B_primes, alpha):
+    def Centeroid_Max(self, B_primes, alpha=0):
         Max = B_primes[0]
         for B_prime in B_primes:
             Max = np.maximum(B_prime, Max)
@@ -29,7 +29,7 @@ class Defuzzifier:
         else:
             return 0
 
-    def Centeroid_Min(self, B_primes, alpha):
+    def Centeroid_Min(self, B_primes, alpha=0):
         Min = B_primes[0]
         for B_prime in B_primes:
             Min = np.minimum(B_prime, Min)

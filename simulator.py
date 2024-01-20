@@ -7,6 +7,10 @@ import math
 import pygame
 import additional_controller
 import fuzzy_controller
+import matplotlib.pyplot as plt
+Wheel_command=[]
+Gas_command=[]
+Sample_numbers=[]
 
 Wheel_contol = fuzzy_controller.FuzzyController()
 gas_contol = additional_controller.FuzzyGasController()
@@ -220,16 +224,33 @@ def run():
         if not car.crashed:
             # rotate_fuzzy_system=fuzzy_controller.FuzzyController()
             Command_wheel = Wheel_contol.decide(relative_left_dist, relative_right_dist)
+            Wheel_command.append(Command_wheel)
             car.angle += Command_wheel
 
             # gas_fuzzy_system = additional_controller.FuzzyGasController()
             Command_gas = gas_contol.decide(center_dist)
+            Gas_command.append(Command_gas)
+            Sample_numbers.append(ind)
+            ind+=1
             car.update_position(Command_gas)
             car.display_car()
             car.crashed = car.crash_check()
             car.update_sensor_data()
             car.display_edge_points()
         else:
+            fig,ax=plt.subplots(1,2)
+            ax[0].plot(Sample_numbers,Wheel_command)
+            ax[0].set_xlabel('Smaple number')
+            ax[0].set_ylabel('Wheel Angle (deg)')
+            ax[0].set_title('Output of wheel angle controller')
+
+            ax[1].plot(Sample_numbers,Gas_command)
+            ax[1].set_xlabel('Smaple number')
+            ax[1].set_ylabel('Gas')
+            ax[1].set_title('Output of gas controller')
+
+            fig.set_size_inches((12,5))
+            plt.show()
             time.sleep(1)
             exit()
 
